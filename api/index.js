@@ -68,8 +68,6 @@ function checkPayment(req, res, next) {
         step3: 'Retry the request',
         documentation: 'https://x402.org/docs'
       }
-    });
-  }
   
   // Payment provided (in production, verify it here)
   // For now, accept any payment proof
