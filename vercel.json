@@ -1,19 +1,13 @@
 {
+  "functions": {
+    "server.js": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
   "rewrites": [
     {
-      "source": "/api/token-data",
-      "destination": "/server.js"
-    },
-    {
-      "source": "/health",
-      "destination": "/server.js"
-    },
-    {
-      "source": "/api/payment-stats",
-      "destination": "/server.js"
-    },
-    {
-      "source": "/",
+      "source": "/(.*)",
       "destination": "/server.js"
     }
   ]
