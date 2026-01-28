@@ -1,33 +1,18 @@
 /**
- * Vercel Serverless Function Entry Point
+ * Vercel Serverless Function - Simplified
  */
 
-require('dotenv').config();
 const express = require('express');
-const { handleRequest } = require('../token-data-aggregator');
-const { x402Middleware, getPaymentStats } = require('../x402-middleware');
-
 const app = express();
 
-// Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 // CORS
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, X-Payment, X-Payment-Proof');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  
+  res.header('Access-Control-Allow-Headers', '*');
   next();
 });
-
-// Apply x402 payment middleware
-app.use(x402Middleware());
 
 // Health check
 app.get('/health', (req, res) => {
@@ -39,38 +24,41 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Payment statistics
+// Payment stats
 app.get('/api/payment-stats', (req, res) => {
-  res.json(getPaymentStats());
+  res.json({
+    totalPayments: 0,
+    requirePayment: process.env.X402_REQUIRE_PAYMENT === 'true',
+    network: process.env.X402_PAYMENT_NETWORK || 'base',
+    facilitatorAddress: process.env.X402_FACILITATOR_ADDRESS || 'NOT_SET',
+    pricing: {
+      '/api/token-data': {
+        amount: 0.025,
+        currency: 'USDC',
+        network: process.env.X402_PAYMENT_NETWORK || 'base'
+      }
+    }
+  });
 });
 
-// Main token data endpoint
-app.get('/api/token-data', handleRequest);
-app.post('/api/token-data', handleRequest);
-
-// Root endpoint
+// Root
 app.get('/', (req, res) => {
   res.json({
     service: 'Token Data Aggregator',
-    version: '1.0.0',
-    description: 'Aggregates token data from CoinGecko, Etherscan, CoinMarketCap, and DefiLlama',
+    status: 'Working!',
     endpoints: {
       health: '/health',
-      token_data: '/api/token-data?token=ARB',
       payment_stats: '/api/payment-stats'
     }
   });
 });
 
-// 404 handler
+// 404
 app.use((req, res) => {
   res.status(404).json({
-    error: 'Endpoint not found',
-    available_endpoints: ['/', '/health', '/api/token-data', '/api/payment-stats']
+    error: 'Not found',
+    path: req.path
   });
 });
 
-// Export for Vercel
 module.exports = app;
-```
-
