@@ -16,7 +16,7 @@ const X402_CONFIG = {
     '/api/token-data': {
       amount: 0.025, // $0.025 USDC
       currency: 'USDC',
-      network: 'base', // or 'solana'
+      network: process.env.X402_PAYMENT_NETWORK || 'base', // 'base' or 'solana'
       description: 'Token data aggregation from 4 sources'
     }
   },
