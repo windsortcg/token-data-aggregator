@@ -1,0 +1,185 @@
+# Token Data Aggregator - x402.jobs
+
+> Real-time Ethereum token data aggregation from multiple free sources
+
+## Service Overview
+
+The Token Data Aggregator provides comprehensive token information by aggregating data from CoinGecko, Etherscan, CoinMarketCap, and DefiLlama. Perfect for trading bots, portfolio trackers, and analysis workflows.
+
+## Main Endpoint
+
+### GET /api/token-data
+
+Aggregates token data from multiple sources and returns comprehensive information.
+
+**Parameters:**
+- `token` (required): Token symbol (e.g., "ARB"), name, or contract address
+- `sources` (optional): Comma-separated list of sources to query
+  - Available: `coingecko`, `etherscan`, `coinmarketcap`, `defillama`
+  - Default: All sources
+
+**Example Request:**
+```
+GET /api/token-data?token=ARB&sources=coingecko,etherscan
+```
+
+**Response Time:** ~500-1500ms depending on sources
+
+**Cache Recommendation:** 5 minutes (300 seconds)
+
+## Data Returned
+
+### Price & Market Data
+- Current price (USD)
+- 24h/7d/30d price changes
+- Market cap
+- Fully diluted valuation (FDV)
+- FDV to market cap ratio
+- 24h trading volume
+- All-time high/low with dates
+
+### Supply Information
+- Circulating supply
+- Total supply
+- Max supply
+- Circulating supply percentage
+
+### Contract Information
+- Ethereum contract address
+- Contract verification status
+- Decimals
+- Token name and symbol
+
+### Additional Metrics
+- Volume to market cap ratio
+- Market cap rank
+- Categories/tags
+- Social links (Twitter, Telegram)
+- Official website
+- Block explorer links
+
+## Response Format
+
+```json
+{
+  "query": {
+    "token_identifier": "ARB",
+    "timestamp": "2026-01-28T...",
+    "response_time_ms": 847,
+    "sources_succeeded": ["coingecko", "etherscan", "defillama"]
+  },
+  "token_info": {
+    "name": "Arbitrum",
+    "symbol": "ARB",
+    "contract_address": "0x912CE59144191C1204E64559FE8253a0e49E6548",
+    "blockchain": "ethereum"
+  },
+  "sources": {
+    "coingecko": { "available": true, "data": {...} },
+    "etherscan": { "available": true, "data": {...} },
+    "coinmarketcap": { "available": false },
+    "defillama": { "available": true, "data": {...} }
+  },
+  "aggregated": {
+    "price_usd": 1.23,
+    "market_cap_usd": 3500000000,
+    "fully_diluted_valuation_usd": 11000000000,
+    "trading_volume_24h_usd": 89000000,
+    "circulating_supply": 3181818181,
+    "total_supply": 10000000000
+  },
+  "metadata": {
+    "job_name": "token-data-aggregator",
+    "x402_compatible": true,
+    "next_job_suggestions": [...]
+  }
+}
+```
+
+## Use Cases
+
+1. **Pre-trade Research**: Get comprehensive token info before trading
+2. **Portfolio Valuation**: Real-time pricing for portfolio tracking
+3. **Trading Bots**: Feed data into automated trading algorithms
+4. **Risk Assessment**: Market cap, volume, and supply metrics
+5. **Job Chaining**: Use as input for other x402 jobs
+
+## Job Chain Examples
+
+This job works well as the first step in:
+- Token unlock analysis workflows
+- Whale wallet monitoring chains
+- Technical analysis pipelines
+- Sentiment analysis workflows
+- Portfolio rebalancing calculations
+
+## Pricing
+
+**Suggested x402 Price:** $0.02-0.03 USD per query
+
+High-volume users and agents benefit from:
+- Pay-per-use model (no subscriptions)
+- Sub-cent pricing for automated workflows
+- Instant settlement via USDC on Base/Solana
+
+## Data Sources
+
+- **CoinGecko**: Price, market, supply data (free tier, no key)
+- **Etherscan**: Contract verification, on-chain data (free API key)
+- **CoinMarketCap**: Market rankings, metadata (optional, free key)
+- **DefiLlama**: DeFi pricing data (free, no key)
+
+## Rate Limits
+
+Based on free tier APIs:
+- CoinGecko: 10-30 calls/minute
+- Etherscan: 5 calls/second (100K/day)
+- CoinMarketCap: ~10K calls/month (if enabled)
+- DefiLlama: No published limits
+
+Recommend client-side caching for 5+ minutes to optimize costs.
+
+## Supported Tokens
+
+Any ERC-20 token on Ethereum mainnet with:
+- Listing on CoinGecko or CoinMarketCap
+- Verified contract on Etherscan
+- Active trading volume
+
+Currently ~10,000+ tokens supported.
+
+## Error Handling
+
+If a source is unavailable, the job continues with other sources. Response includes:
+- `sources_succeeded`: Array of working sources
+- Individual source `available` flags
+- Error messages for failed sources
+- Aggregated data from best available sources
+
+## Technical Details
+
+- **Runtime**: Node.js 14+
+- **Response Format**: JSON
+- **CORS**: Enabled for agent access
+- **Health Check**: `/health` endpoint
+- **Version**: 1.0.0
+
+## Future Enhancements
+
+Planned features:
+- Historical price data
+- Multi-chain support (Solana, BSC, Polygon)
+- Custom aggregation formulas
+- Webhooks for price alerts
+- Batch token queries
+
+## Support
+
+For issues or feature requests:
+- Documentation: [Your docs URL]
+- GitHub: [Your repo URL]
+- Contact: [Your contact]
+
+---
+
+*This service is part of the x402.jobs marketplace for autonomous agent payments.*

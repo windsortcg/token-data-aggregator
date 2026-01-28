@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/token-data",
+      "dest": "server.js"
+    },
+    {
+      "src": "/health",
+      "dest": "server.js"
+    },
+    {
+      "src": "/llms.txt",
+      "dest": "llms.txt"
+    },
+    {
+      "src": "/",
+      "dest": "server.js"
+    }
+  ],
+  "env": {
+    "ETHERSCAN_API_KEY": "@etherscan_api_key",
+    "CMC_API_KEY": "@cmc_api_key"
+  }
+}
