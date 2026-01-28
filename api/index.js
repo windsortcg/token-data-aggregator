@@ -43,8 +43,7 @@ function checkPayment(req, res, next) {
   // Check for payment proof in headers
   const paymentProof = req.headers['x-payment'] || req.headers['x-payment-proof'];
   
- if (!paymentProof) {
-    // No payment provided, return 402
+if (!paymentProof) {
     return res.status(402).json({
       error: 'Payment Required',
       message: 'This endpoint requires payment via x402 protocol',
@@ -52,22 +51,10 @@ function checkPayment(req, res, next) {
       currency: 'USDC',
       network: X402_CONFIG.network,
       payTo: X402_CONFIG.facilitatorAddress,
-      reference: `req-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      description: 'Token data aggregation from 4 sources',
-      instructions: {
-        step1: 'Complete payment using the details above',
-        step2: 'Include payment proof in X-Payment header',
-        step3: 'Retry the request',
-        documentation: 'https://x402.org/docs'
-      }
+      reference: 'req-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9),
+      description: 'Token data aggregation from 4 sources'
     });
   }
-      instructions: {
-        step1: 'Complete payment using the details above',
-        step2: 'Include payment proof in X-Payment header',
-        step3: 'Retry the request',
-        documentation: 'https://x402.org/docs'
-      }
   
   // Payment provided (in production, verify it here)
   // For now, accept any payment proof
