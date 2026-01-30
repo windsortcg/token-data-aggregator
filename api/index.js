@@ -45,14 +45,18 @@ function checkPayment(req, res, next) {
   
 if (!paymentProof) {
     return res.status(402).json({
-      error: 'Payment Required',
-      message: 'This endpoint requires payment via x402 protocol',
-      amount: X402_CONFIG.price,
-      currency: 'USDC',
-      network: X402_CONFIG.network,
-      payTo: X402_CONFIG.facilitatorAddress,
-      reference: 'req-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9),
-      description: 'Token data aggregation from 4 sources'
+      x402Version: 2,
+      resource: {
+        url: 'https://token-data-aggregator.vercel.app/api/token-data'
+      },
+      accepts: [{
+        scheme: 'exact',
+        network: X402_CONFIG.network,
+        payTo: X402_CONFIG.facilitatorAddress,
+        asset: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDtv',
+        amount: '25000',
+        maxTimeoutSeconds: 300
+      }]
     });
   }
   
