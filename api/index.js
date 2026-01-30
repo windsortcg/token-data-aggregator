@@ -51,7 +51,7 @@ if (!paymentProof) {
       },
       accepts: [{
         scheme: 'exact',
-        network: X402_CONFIG.network,
+        network: 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp',
         payTo: X402_CONFIG.facilitatorAddress,
         asset: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDtv',
         amount: '25000',
